@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: configserver
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/amejid/microservices-demo-config-server-repo
+          clone-on-start: true
+          username: amejid
+          password: '{cipher}26b1ac0bed190edb91f5b6bd3e11a8e3117e218857f607a931e30af8380a6b9fc738f2190a831512c63fb32690191e12cba050f517e3d03f07281fcc79fefef6'
+          default-label: main
+      fail-fast: true
+  security:
+    user:
+      name: spring_cloud_user
+      password: '{cipher}fb867cf99e7cbcdba6b4f48abf6f471af09a5007b6bdce65ebb51314003915eeb5369f306dd72be5ba991db812a7e101'
+
+encrypt:
+  key: ${ENCRYPT_KEY}
