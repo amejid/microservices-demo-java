@@ -5,7 +5,7 @@ import java.util.List;
 import com.microservices.demo.elastic.model.index.impl.TwitterIndexModel;
 import com.microservices.demo.elastic.query.client.service.ElasticQueryClient;
 import com.microservices.demo.elastic.query.service.business.ElasticQueryService;
-import com.microservices.demo.elastic.query.service.model.ElasticQueryServiceResponseModel;
+import com.microservices.demo.elastic.query.service.common.model.ElasticQueryServiceResponseModel;
 import com.microservices.demo.elastic.query.service.model.assembler.ElasticQueryServiceResponseModelAssembler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -6,8 +6,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 
 import com.microservices.demo.elastic.query.service.business.ElasticQueryService;
-import com.microservices.demo.elastic.query.service.model.ElasticQueryServiceRequestModel;
-import com.microservices.demo.elastic.query.service.model.ElasticQueryServiceResponseModel;
+import com.microservices.demo.elastic.query.service.common.model.ElasticQueryServiceRequestModel;
+import com.microservices.demo.elastic.query.service.common.model.ElasticQueryServiceResponseModel;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
