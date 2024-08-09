@@ -35,3 +35,5 @@ build/
 logs/
 config-server-repository
 docker-compose/docker-logs
+
+*.log
