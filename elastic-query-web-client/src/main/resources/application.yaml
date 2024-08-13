@@ -1,0 +1,11 @@
+logging:
+  level:
+    root: debug
+
+elastic-query-web-client:
+  webclient:
+    instances:
+      -
+        id: elastic-query-service-1
+        host: localhost
+        port: 8183

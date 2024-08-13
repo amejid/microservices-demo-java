@@ -17,6 +17,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@PreAuthorize("isAuthenticated()")
 @RestController
 @RequestMapping(value = "/documents", produces = "application/vnd.api.v1+json")
 public class ElasticDocumentController {
@@ -36,6 +39,7 @@ public class ElasticDocumentController {
 		this.elasticQueryService = elasticQueryService;
 	}
 
+	@PostAuthorize("hasPermission(returnObject, 'READ')")
 	@Operation(summary = "Get all elastic documents")
 	@ApiResponse(responseCode = "200", description = "Success",
 			content = { @Content(mediaType = "application/vnd.api.v1+json",
@@ -49,6 +53,7 @@ public class ElasticDocumentController {
 		return ResponseEntity.ok(response);
 	}
 
+	@PreAuthorize("hasPermission(#id, 'ElasticQueryServiceResponseModel','READ')")
 	@Operation(summary = "Get elastic document by id")
 	@ApiResponse(responseCode = "200", description = "Success",
 			content = { @Content(mediaType = "application/vnd.api.v1+json",
@@ -62,6 +67,8 @@ public class ElasticDocumentController {
 		return ResponseEntity.ok(response);
 	}
 
+	@PreAuthorize("hasRole('APP_USER_ROLE') || hasRole('APP_SUPER_USER_ROLE') || hasAuthority('SCOPE_APP_USER_ROLE')")
+	@PostAuthorize("hasPermission(returnObject, 'READ')")
 	@Operation(summary = "Get elastic document by text")
 	@ApiResponse(responseCode = "200", description = "Success",
 			content = { @Content(mediaType = "application/vnd.api.v1+json",

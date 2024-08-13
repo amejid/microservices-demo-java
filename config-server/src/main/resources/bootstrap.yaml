@@ -8,7 +8,7 @@ spring:
           uri: https://github.com/amejid/microservices-demo-config-server-repo
           clone-on-start: true
           username: amejid
-          password: '{cipher}26b1ac0bed190edb91f5b6bd3e11a8e3117e218857f607a931e30af8380a6b9fc738f2190a831512c63fb32690191e12cba050f517e3d03f07281fcc79fefef6'
+          password: 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
           default-label: main
       fail-fast: true
   security:
