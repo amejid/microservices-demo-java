@@ -2,13 +2,12 @@ package com.microservices.demo.analytics.service.api;
 
 import java.util.Optional;
 
-import jakarta.validation.constraints.NotEmpty;
-
 import com.microservices.demo.analytics.service.business.AnalyticsService;
 import com.microservices.demo.analytics.service.model.AnalyticsResponseModel;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.constraints.NotEmpty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

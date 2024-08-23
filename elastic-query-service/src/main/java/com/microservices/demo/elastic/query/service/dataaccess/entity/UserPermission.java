@@ -5,7 +5,6 @@ import java.util.UUID;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
-
 import lombok.Data;
 
 @Entity

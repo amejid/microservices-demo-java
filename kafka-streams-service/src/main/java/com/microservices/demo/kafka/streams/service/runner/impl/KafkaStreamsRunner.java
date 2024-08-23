@@ -8,14 +8,13 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
-import jakarta.annotation.PreDestroy;
-
 import com.microservices.demo.config.KafkaConfigData;
 import com.microservices.demo.config.KafkaStreamsConfigData;
 import com.microservices.demo.kafka.avro.model.TwitterAnalyticsAvroModel;
 import com.microservices.demo.kafka.avro.model.TwitterAvroModel;
 import com.microservices.demo.kafka.streams.service.runner.StreamsRunner;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
+import jakarta.annotation.PreDestroy;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.KafkaStreams;

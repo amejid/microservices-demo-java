@@ -4,11 +4,10 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-import jakarta.servlet.http.HttpServletRequest;
-
 import com.microservices.demo.elastic.query.service.common.model.ElasticQueryServiceRequestModel;
 import com.microservices.demo.elastic.query.service.common.model.ElasticQueryServiceResponseModel;
 import com.microservices.demo.elastic.query.service.model.ElasticQueryServiceAnalyticsResponseModel;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.PermissionEvaluator;
@@ -32,8 +31,8 @@ public class QueryServicePermissionEvaluator implements PermissionEvaluator {
 		if (isSuperUser()) {
 			return true;
 		}
-		if (targetDomain instanceof ElasticQueryServiceRequestModel) {
-			return preAuthorize(authentication, ((ElasticQueryServiceRequestModel) targetDomain).getId(), permission);
+		if (targetDomain instanceof ElasticQueryServiceRequestModel elasticQueryServiceRequestModel) {
+			return preAuthorize(authentication, elasticQueryServiceRequestModel.getId(), permission);
 		}
 		else if (targetDomain instanceof ResponseEntity || targetDomain == null) {
 			if (targetDomain == null) {

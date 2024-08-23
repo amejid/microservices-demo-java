@@ -1,10 +1,9 @@
 package com.microservices.demo.reactive.elastic.query.service.api;
 
-import jakarta.validation.Valid;
-
 import com.microservices.demo.elastic.query.service.common.model.ElasticQueryServiceRequestModel;
 import com.microservices.demo.elastic.query.service.common.model.ElasticQueryServiceResponseModel;
 import com.microservices.demo.reactive.elastic.query.service.business.ElasticQueryService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;

@@ -2,12 +2,11 @@ package com.microservices.demo.analytics.service.dataaccess.repository.impl;
 
 import java.util.Collection;
 
+import com.microservices.demo.analytics.service.dataaccess.entity.BaseEntity;
+import com.microservices.demo.analytics.service.dataaccess.repository.AnalyticsCustomRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
-
-import com.microservices.demo.analytics.service.dataaccess.entity.BaseEntity;
-import com.microservices.demo.analytics.service.dataaccess.repository.AnalyticsCustomRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

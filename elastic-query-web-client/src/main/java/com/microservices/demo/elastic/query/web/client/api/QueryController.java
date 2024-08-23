@@ -1,10 +1,9 @@
 package com.microservices.demo.elastic.query.web.client.api;
 
-import jakarta.validation.Valid;
-
 import com.microservices.demo.elastic.query.web.client.common.model.ElasticQueryWebClientAnalyticsResponseModel;
 import com.microservices.demo.elastic.query.web.client.common.model.ElasticQueryWebClientRequestModel;
 import com.microservices.demo.elastic.query.web.client.service.ElasticQueryWebClient;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
