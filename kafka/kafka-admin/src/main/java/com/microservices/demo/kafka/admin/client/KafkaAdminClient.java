@@ -14,13 +14,13 @@ import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.admin.TopicListing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import reactor.core.publisher.Mono;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.retry.RetryContext;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
@@ -94,8 +94,14 @@ public class KafkaAdminClient {
 		try {
 			return this.webClient.method(HttpMethod.GET)
 				.uri(this.kafkaConfigData.getSchemaRegistryUrl())
-				.exchange()
-				.map(ClientResponse::statusCode)
+				.exchangeToMono(response -> {
+					if (response.statusCode().is2xxSuccessful()) {
+						return Mono.just(response.statusCode());
+					}
+					else {
+						return Mono.just(HttpStatus.SERVICE_UNAVAILABLE);
+					}
+				})
 				.block();
 		}
 		catch (Exception ex) {

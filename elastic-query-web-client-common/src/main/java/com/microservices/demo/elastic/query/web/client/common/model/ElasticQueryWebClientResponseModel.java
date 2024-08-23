@@ -1,6 +1,6 @@
 package com.microservices.demo.elastic.query.web.client.common.model;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +19,6 @@ public class ElasticQueryWebClientResponseModel {
 
 	private String text;
 
-	private LocalDateTime createdAt;
+	private ZonedDateTime createdAt;
 
 }

@@ -7,11 +7,8 @@ import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import reactor.netty.http.client.HttpClient;
-import reactor.netty.tcp.TcpClient;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
-import org.springframework.cloud.loadbalancer.annotation.LoadBalancerClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -22,7 +19,6 @@ import org.springframework.security.oauth2.client.web.reactive.function.client.S
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
-@LoadBalancerClient(name = "elastic-query-service", configuration = ElasticQueryServiceInstanceListSupplierConfig.class)
 public class WebClientConfig {
 
 	@Value("${security.default-client-registration-id}")
@@ -34,7 +30,6 @@ public class WebClientConfig {
 		this.elasticQueryWebClientConfigData = elasticQueryWebClientConfigData.getWebclient();
 	}
 
-	@LoadBalanced
 	@Bean("webClientBuilder")
 	WebClient.Builder webClientBuilder(ClientRegistrationRepository clientRegistrationRepository,
 			OAuth2AuthorizedClientRepository oAuth2AuthorizedClientRepository) {
@@ -46,14 +41,14 @@ public class WebClientConfig {
 			.baseUrl(this.elasticQueryWebClientConfigData.getBaseUrl())
 			.defaultHeader(HttpHeaders.CONTENT_TYPE, this.elasticQueryWebClientConfigData.getContentType())
 			.defaultHeader(HttpHeaders.ACCEPT, this.elasticQueryWebClientConfigData.getAcceptType())
-			.clientConnector(new ReactorClientHttpConnector(HttpClient.from(getTcpClient())))
+			.clientConnector(new ReactorClientHttpConnector(getHttpClient()))
 			.apply(oauth2.oauth2Configuration())
 			.codecs(configurer -> configurer.defaultCodecs()
 				.maxInMemorySize(this.elasticQueryWebClientConfigData.getMaxInMemorySize()));
 	}
 
-	private TcpClient getTcpClient() {
-		return TcpClient.create()
+	private HttpClient getHttpClient() {
+		return HttpClient.create()
 			.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, this.elasticQueryWebClientConfigData.getConnectTimeoutMs())
 			.doOnConnected(connection -> {
 				connection.addHandlerLast(new ReadTimeoutHandler(

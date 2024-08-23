@@ -1,6 +1,6 @@
 package com.microservices.demo.elastic.query.service.common.model;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 import org.springframework.hateoas.RepresentationModel;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = false)
 @Data
 @Builder
 @NoArgsConstructor
@@ -23,6 +23,6 @@ public class ElasticQueryServiceResponseModel extends RepresentationModel<Elasti
 
 	private String text;
 
-	private LocalDateTime createdAt;
+	private ZonedDateTime createdAt;
 
 }

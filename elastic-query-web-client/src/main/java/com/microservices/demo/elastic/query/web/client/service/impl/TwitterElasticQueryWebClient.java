@@ -1,14 +1,14 @@
 package com.microservices.demo.elastic.query.web.client.service.impl;
 
-import java.util.List;
-
 import com.microservices.demo.config.ElasticQueryWebClientConfigData;
 import com.microservices.demo.elastic.query.web.client.common.exception.ElasticQueryWebClientException;
+import com.microservices.demo.elastic.query.web.client.common.model.ElasticQueryWebClientAnalyticsResponseModel;
 import com.microservices.demo.elastic.query.web.client.common.model.ElasticQueryWebClientRequestModel;
-import com.microservices.demo.elastic.query.web.client.common.model.ElasticQueryWebClientResponseModel;
 import com.microservices.demo.elastic.query.web.client.service.ElasticQueryWebClient;
+import com.microservices.demo.mdc.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import reactor.core.publisher.Mono;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,9 +37,9 @@ public class TwitterElasticQueryWebClient implements ElasticQueryWebClient {
 	}
 
 	@Override
-	public List<ElasticQueryWebClientResponseModel> getDataByText(ElasticQueryWebClientRequestModel requestModel) {
+	public ElasticQueryWebClientAnalyticsResponseModel getDataByText(ElasticQueryWebClientRequestModel requestModel) {
 		LOG.info("Querying by text {}", requestModel.getText());
-		return getWebClient(requestModel).bodyToFlux(ElasticQueryWebClientResponseModel.class).collectList().block();
+		return getWebClient(requestModel).bodyToMono(ElasticQueryWebClientAnalyticsResponseModel.class).block();
 	}
 
 	private WebClient.ResponseSpec getWebClient(ElasticQueryWebClientRequestModel requestModel) {
@@ -47,6 +47,7 @@ public class TwitterElasticQueryWebClient implements ElasticQueryWebClient {
 			.method(HttpMethod.valueOf(this.elasticQueryWebClientConfigData.getQueryByText().getMethod()))
 			.uri(this.elasticQueryWebClientConfigData.getQueryByText().getUri())
 			.accept(MediaType.valueOf(this.elasticQueryWebClientConfigData.getQueryByText().getAccept()))
+			.header(Constants.CORRELATION_ID_HEADER, MDC.get(Constants.CORRELATION_ID_KEY))
 			.body(BodyInserters.fromPublisher(Mono.just(requestModel), createParametrizedTypeReference()))
 			.retrieve()
 			.onStatus(httpStatus -> httpStatus.equals(HttpStatus.UNAUTHORIZED),

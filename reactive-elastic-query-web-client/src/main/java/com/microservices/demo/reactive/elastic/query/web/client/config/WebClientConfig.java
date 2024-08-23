@@ -7,7 +7,6 @@ import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import reactor.netty.http.client.HttpClient;
-import reactor.netty.tcp.TcpClient;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,13 +28,13 @@ public class WebClientConfig {
 		return WebClient.builder()
 			.baseUrl(this.webClientConfig.getBaseUrl())
 			.defaultHeader(HttpHeaders.CONTENT_TYPE, this.webClientConfig.getContentType())
-			.clientConnector(new ReactorClientHttpConnector(HttpClient.from(getTcpClient())))
+			.clientConnector(new ReactorClientHttpConnector(getHttpClient()))
 			.codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(this.webClientConfig.getMaxInMemorySize()))
 			.build();
 	}
 
-	private TcpClient getTcpClient() {
-		return TcpClient.create()
+	private HttpClient getHttpClient() {
+		return HttpClient.create()
 			.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, this.webClientConfig.getConnectTimeoutMs())
 			.doOnConnected(connection -> {
 				connection.addHandlerLast(

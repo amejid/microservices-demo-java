@@ -10,6 +10,7 @@ import com.microservices.demo.elastic.query.service.common.transformer.ElasticTo
 
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -25,7 +26,7 @@ public class ElasticQueryServiceResponseModelAssembler
 	}
 
 	@Override
-	public ElasticQueryServiceResponseModel toModel(TwitterIndexModel entity) {
+	public ElasticQueryServiceResponseModel toModel(@NonNull TwitterIndexModel entity) {
 		ElasticQueryServiceResponseModel responseModel = this.elasticToResponseModelTransformer
 			.getResponseModel(entity);
 		responseModel.add(WebMvcLinkBuilder
