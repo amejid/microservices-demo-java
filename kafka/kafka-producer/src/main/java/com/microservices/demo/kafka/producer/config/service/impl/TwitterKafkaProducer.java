@@ -1,9 +1,11 @@
 package com.microservices.demo.kafka.producer.config.service.impl;
 
-import javax.annotation.PreDestroy;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.BiConsumer;
 
 import com.microservices.demo.kafka.avro.model.TwitterAvroModel;
 import com.microservices.demo.kafka.producer.config.service.KafkaProducer;
+import jakarta.annotation.PreDestroy;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
 
 @Service
 public class TwitterKafkaProducer implements KafkaProducer<Long, TwitterAvroModel> {
@@ -29,10 +29,9 @@ public class TwitterKafkaProducer implements KafkaProducer<Long, TwitterAvroMode
 	public void send(String topicName, Long key, TwitterAvroModel message) {
 		LOG.info("Sending message='{}' to topic='{}'", message, topicName);
 
-		ListenableFuture<SendResult<Long, TwitterAvroModel>> kafkaResultFuture = this.kafkaTemplate.send(topicName, key,
-				message);
-
-		addCallback(topicName, message, kafkaResultFuture);
+		CompletableFuture<SendResult<Long, TwitterAvroModel>> kafkaResultFuture = this.kafkaTemplate.send(topicName,
+				key, message);
+		kafkaResultFuture.whenComplete(getCallback(topicName, message));
 	}
 
 	@PreDestroy
@@ -43,22 +42,19 @@ public class TwitterKafkaProducer implements KafkaProducer<Long, TwitterAvroMode
 		}
 	}
 
-	private void addCallback(String topicName, TwitterAvroModel message,
-			ListenableFuture<SendResult<Long, TwitterAvroModel>> kafkaResultFuture) {
-		kafkaResultFuture.addCallback(new ListenableFutureCallback<>() {
-			@Override
-			public void onFailure(Throwable ex) {
-				LOG.error("Error while sending message: {} to topic {}", message, topicName, ex);
-			}
-
-			@Override
-			public void onSuccess(SendResult<Long, TwitterAvroModel> result) {
+	private BiConsumer<SendResult<Long, TwitterAvroModel>, Throwable> getCallback(String topicName,
+			TwitterAvroModel message) {
+		return (result, ex) -> {
+			if (ex == null) {
 				RecordMetadata metadata = result.getRecordMetadata();
 				LOG.debug("Received new metadata. Topic: {}; Partition: {}; Offset: {}; Timestamp: {}, at time: {}",
 						metadata.topic(), metadata.partition(), metadata.offset(), metadata.timestamp(),
 						System.nanoTime());
 			}
-		});
+			else {
+				LOG.error("Error while sending message: {} to topic {}", message, topicName, ex);
+			}
+		};
 	}
 
 }

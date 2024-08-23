@@ -3,14 +3,15 @@ package com.microservices.demo.elastic.query.web.client.config;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
+import com.microservices.demo.config.RetryConfigData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,6 +22,7 @@ import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 public class WebSecurityConfig {
@@ -48,32 +50,25 @@ public class WebSecurityConfig {
 	}
 
 	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.authorizeRequests()
-			.antMatchers("/")
+	public SecurityFilterChain filterChain(HttpSecurity http, RetryConfigData retryConfigData) throws Exception {
+		http.authorizeHttpRequests(requests -> requests.requestMatchers(new AntPathRequestMatcher("/"))
 			.permitAll()
 			.anyRequest()
-			.fullyAuthenticated()
-			.and()
-			.logout()
-			.logoutSuccessHandler(oidcClientInitiatedLogoutSuccessHandler())
-			.and()
-			.oauth2Client()
-			.and()
-			.oauth2Login()
-			.userInfoEndpoint()
-			.userAuthoritiesMapper(userAuthoritiesMapper());
+			.authenticated())
+			.logout(conf -> conf.logoutSuccessHandler(oidcClientInitiatedLogoutSuccessHandler()))
+			.oauth2Client(Customizer.withDefaults())
+			.oauth2Login(conf -> conf.userInfoEndpoint(Customizer.withDefaults()));
 
 		return http.build();
 	}
 
-	private GrantedAuthoritiesMapper userAuthoritiesMapper() {
+	@Bean
+	public GrantedAuthoritiesMapper userAuthoritiesMapper() {
 		return authorities -> {
 			Set<GrantedAuthority> mappedAuthorities = new HashSet<>();
 
 			authorities.forEach(authority -> {
-				if (authority instanceof OidcUserAuthority) {
-					OidcUserAuthority oidcUserAuthority = (OidcUserAuthority) authority;
+				if (authority instanceof OidcUserAuthority oidcUserAuthority) {
 					OidcIdToken oidcIdToken = oidcUserAuthority.getIdToken();
 					LOG.info("Username from id token: {}", oidcIdToken.getPreferredUsername());
 					OidcUserInfo oidcUserInfo = oidcUserAuthority.getUserInfo();
@@ -81,7 +76,7 @@ public class WebSecurityConfig {
 					List<SimpleGrantedAuthority> groupAuthorities = oidcUserInfo.getClaimAsStringList(GROUPS_CLAIM)
 						.stream()
 						.map(group -> new SimpleGrantedAuthority(ROLE_PREFIX + group.toUpperCase()))
-						.collect(Collectors.toList());
+						.toList();
 
 					mappedAuthorities.addAll(groupAuthorities);
 				}

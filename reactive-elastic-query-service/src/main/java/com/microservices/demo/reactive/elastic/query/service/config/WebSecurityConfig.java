@@ -10,8 +10,8 @@ public class WebSecurityConfig {
 
 	@Bean
 	public SecurityWebFilterChain webFluxSecurityConfig(ServerHttpSecurity httpSecurity) {
-		httpSecurity.authorizeExchange().anyExchange().permitAll();
-		httpSecurity.csrf().disable();
+		httpSecurity.authorizeExchange(authorize -> authorize.anyExchange().permitAll())
+			.csrf(ServerHttpSecurity.CsrfSpec::disable);
 		return httpSecurity.build();
 	}
 

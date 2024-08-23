@@ -3,7 +3,6 @@ package com.microservices.demo.kafka.admin.client;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 import com.microservices.demo.config.KafkaConfigData;
 import com.microservices.demo.config.RetryConfigData;
@@ -18,6 +17,7 @@ import reactor.core.publisher.Mono;
 
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.retry.RetryContext;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Component;
@@ -90,7 +90,7 @@ public class KafkaAdminClient {
 		}
 	}
 
-	private HttpStatus getSchemaRegistryStatus() {
+	private HttpStatusCode getSchemaRegistryStatus() {
 		try {
 			return this.webClient.method(HttpMethod.GET)
 				.uri(this.kafkaConfigData.getSchemaRegistryUrl())
@@ -138,7 +138,7 @@ public class KafkaAdminClient {
 		List<NewTopic> newTopicList = topicNames.stream()
 			.map(topicName -> new NewTopic(topicName.trim(), this.kafkaConfigData.getNumOfPartitions(),
 					this.kafkaConfigData.getReplicationFactor()))
-			.collect(Collectors.toList());
+			.toList();
 
 		return this.adminClient.createTopics(newTopicList);
 	}

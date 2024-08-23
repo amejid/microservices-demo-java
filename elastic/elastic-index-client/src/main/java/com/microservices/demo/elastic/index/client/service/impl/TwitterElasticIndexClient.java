@@ -1,7 +1,6 @@
 package com.microservices.demo.elastic.index.client.service.impl;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.microservices.demo.config.ElasticConfigData;
 import com.microservices.demo.elastic.index.client.service.ElasticIndexClient;
@@ -42,8 +41,8 @@ public class TwitterElasticIndexClient implements ElasticIndexClient<TwitterInde
 		List<String> documentIds = this.elasticsearchOperations
 			.bulkIndex(indexQueries, IndexCoordinates.of(this.elasticConfigData.getIndexName()))
 			.stream()
-			.map(IndexedObjectInformation::getId)
-			.collect(Collectors.toList());
+			.map(IndexedObjectInformation::id)
+			.toList();
 		LOG.info("Documents indexed successfully with type: {} and ids: {}", TwitterIndexModel.class.getName(),
 				documentIds);
 		return documentIds;

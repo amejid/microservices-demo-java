@@ -50,11 +50,11 @@ public class TwitterElasticQueryWebClient implements ElasticQueryWebClient {
 			.retrieve()
 			.onStatus(httpStatus -> httpStatus.equals(HttpStatus.UNAUTHORIZED),
 					clientResponse -> Mono.just(new BadCredentialsException("Not authenticated!")))
-			.onStatus(HttpStatus::is4xxClientError,
+			.onStatus(status -> status.equals(HttpStatus.BAD_REQUEST),
 					clientResponse -> Mono
-						.just(new ElasticQueryWebClientException(clientResponse.statusCode().getReasonPhrase())))
-			.onStatus(HttpStatus::is5xxServerError,
-					clientResponse -> Mono.just(new Exception(clientResponse.statusCode().getReasonPhrase())));
+						.just(new ElasticQueryWebClientException(clientResponse.statusCode().toString())))
+			.onStatus(status -> status.equals(HttpStatus.INTERNAL_SERVER_ERROR),
+					clientResponse -> Mono.just(new Exception(clientResponse.statusCode().toString())));
 	}
 
 	private <T> ParameterizedTypeReference<T> createParametrizedTypeReference() {

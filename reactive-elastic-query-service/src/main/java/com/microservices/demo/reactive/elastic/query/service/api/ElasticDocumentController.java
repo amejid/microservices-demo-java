@@ -1,6 +1,6 @@
 package com.microservices.demo.reactive.elastic.query.service.api;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import com.microservices.demo.elastic.query.service.common.model.ElasticQueryServiceRequestModel;
 import com.microservices.demo.elastic.query.service.common.model.ElasticQueryServiceResponseModel;

@@ -2,7 +2,7 @@ package com.microservices.demo.analytics.service.api;
 
 import java.util.Optional;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 
 import com.microservices.demo.analytics.service.business.AnalyticsService;
 import com.microservices.demo.analytics.service.model.AnalyticsResponseModel;

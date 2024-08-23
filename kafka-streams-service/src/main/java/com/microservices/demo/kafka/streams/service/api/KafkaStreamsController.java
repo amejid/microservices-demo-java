@@ -1,6 +1,6 @@
 package com.microservices.demo.kafka.streams.service.api;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 
 import com.microservices.demo.kafka.streams.service.model.KafkaStreamsResponseModel;
 import com.microservices.demo.kafka.streams.service.runner.StreamsRunner;

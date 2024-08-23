@@ -1,9 +1,8 @@
 package com.microservices.demo.mdc.interceptor;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.microservices.demo.mdc.Constants;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.MDC;
 
 import org.springframework.lang.NonNull;

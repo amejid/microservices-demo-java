@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PreDestroy;
 
 import com.microservices.demo.config.KafkaConfigData;
 import com.microservices.demo.config.KafkaStreamsConfigData;
